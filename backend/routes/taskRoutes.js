@@ -9,7 +9,7 @@ router.post('/create', authGuard ,async (req, res) => {
   try {
     const { amount, description, date, category,type} = req.body;
  
-    const task = new Task({ amount, description, date, category,type, assignedTo:req.user ,key:date});
+    const task = new Task({ amount, description, date, category,type, assignedTo:req.user ,key:Date.now().toString()});
     await task.save();
     const user = await User.findById(req.user);
     user.expense.push(task._id);
