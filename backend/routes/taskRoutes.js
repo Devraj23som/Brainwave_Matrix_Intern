@@ -19,6 +19,19 @@ router.post('/create', authGuard ,async (req, res) => {
     res.status(500).send('Error creating task');
   }
 });
+router.get('/delete/:id', async (req, res) => {
+  try {
+   const task= await Task.findByIdAndDelete(req.params.id);
+     await   User.updateOne(
+          { _id: task.assignedTo }, 
+          { $pull: { tasks: req.params.id } } 
+        )
+    res.status(200);
+  } catch (err) {
+    res.status(500).send('Error deleting task');
+  }
+});
+
 
 
 

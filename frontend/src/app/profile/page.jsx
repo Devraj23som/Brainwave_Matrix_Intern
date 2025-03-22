@@ -6,8 +6,9 @@ import Modal from 'antd/es/modal/Modal'
 import { DatePicker, Form, Input, Select, Table } from 'antd'
 import Nav from '../components/Nav'
 import { useRouter } from 'next/navigation'
-import { AreaChartOutlined, BarChartOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { AreaChartOutlined, BarChartOutlined, DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import Analyst from '../components/Analyst'
+import axios from 'axios'
 const page = () => {
   const [userData, setUserData] = useState([]);
   const [Task, setTask] = useState([]);
@@ -15,11 +16,40 @@ const page = () => {
   const [form] = Form.useForm(); 
     const Router=useRouter();
   const [showModel, setshowModel] = useState(false)
-  const logoutHandler=async()=>{
-    console.log("hello")
-    localStorage.removeItem('authToken'); // or sessionStorage.removeItem('token');
-    // Redirect to login page
-    window.location.href = '/';
+  const columns = [
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: '1',
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: '2',
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      key: '3',
+    },
+    {
+      title: 'Desciption',
+      dataIndex: 'description',
+      key: '4',
+    },
+    {
+      title:"Action",
+      render:(title,record)=>(
+        <div>
+          <DeleteOutlined onClick={()=>handleDelete(record)}/>
+        </div>
+      )
+    }
+  ];
+
+  const handleDelete=async(record)=>{
+    // console.log(record)
+    await axios.get(`http://localhost:5000/api/tasks/delete/${record._id}`)
   };
   const handleSubmit=async(data)=>{
 console.log(data)
@@ -57,28 +87,7 @@ try {
 }
 
   }
-  const columns = [
-    {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: '1',
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      key: '2',
-    },
-    {
-      title: 'Category',
-      dataIndex: 'category',
-      key: '3',
-    },
-    {
-      title: 'Desciption',
-      dataIndex: 'description',
-      key: '4',
-    },
-  ];
+  
   useEffect(() => {
     // console.log(token)
     const fetchData = async () => {
